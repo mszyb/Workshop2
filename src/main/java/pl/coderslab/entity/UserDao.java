@@ -1,5 +1,6 @@
 package pl.coderslab.entity;
 
+import pl.coderslab.BCrypt.BCrypt;
 import pl.coderslab.dbUtil.DbUtil;
 import pl.coderslab.model.User;
 
@@ -14,41 +15,39 @@ public class UserDao {
     private static final String DELETE_USER_QUERY = "DELETE FROM users WHERE id = ?;";
 
     public User create(User user) {
-        long id = 0;
         try (Connection conn = DbUtil.getConnection()) {
             PreparedStatement preStatement = conn.prepareStatement(CREATE_USER_QUERY, PreparedStatement.RETURN_GENERATED_KEYS);
             preStatement.setString(1, user.getEmail());
             preStatement.setString(2, user.getUserName());
-            preStatement.setString(3, user.getPassword());
+            preStatement.setString(3, hashPass(user.getPassword()));
             preStatement.executeUpdate();
             ResultSet rs = preStatement.getGeneratedKeys();
             if (rs.next()) {
-                id = rs.getLong(1);
-                System.out.println("Inserted user ID is: " + id);
+                user.setId(rs.getLong(1));
             }
-            user.setId(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return user;
     }
 
-    public User read(int id) {
-        User user = new User();
+    public User read(long id) {
         try (Connection conn = DbUtil.getConnection()) {
             PreparedStatement preStatement = conn.prepareStatement(READ_USER_QUERY);
-            preStatement.setInt(1, id);
+            preStatement.setLong(1, id);
             ResultSet rs = preStatement.executeQuery();
             if (rs.next()) {
+                User user = new User();
                 user.setId(Long.parseLong(rs.getString("id")));
                 user.setUserName(rs.getString("userName"));
                 user.setEmail(rs.getString("email"));
-                user.setPassword("password");
+                user.setPassword(rs.getString("password"));
+                return user;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return user;
+        return null;
     }
 
     public void update(User user) {
@@ -92,7 +91,7 @@ public class UserDao {
         return usersArray;
     }
 
-    public void delete(int id) {
+    public void delete(long id) {
         try (Connection conn = DbUtil.getConnection()) {
             PreparedStatement preStatement = conn.prepareStatement(DELETE_USER_QUERY);
             preStatement.setString(1, String.valueOf(id));
@@ -101,5 +100,9 @@ public class UserDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private String hashPass(String pass){
+        return BCrypt.hashpw(pass, BCrypt.gensalt());
     }
 }

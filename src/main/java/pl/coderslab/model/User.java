@@ -1,5 +1,7 @@
 package pl.coderslab.model;
 
+import pl.coderslab.BCrypt.BCrypt;
+
 public class User {
     private long id;
     private String userName;
