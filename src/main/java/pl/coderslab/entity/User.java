@@ -1,6 +1,4 @@
-package pl.coderslab.model;
-
-import pl.coderslab.BCrypt.BCrypt;
+package pl.coderslab.entity;
 
 public class User {
     private long id;

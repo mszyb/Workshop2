@@ -1,8 +1,8 @@
-package pl.coderslab.entity;
+package pl.coderslab.DAO;
 
 import pl.coderslab.BCrypt.BCrypt;
 import pl.coderslab.dbUtil.DbUtil;
-import pl.coderslab.model.User;
+import pl.coderslab.entity.User;
 
 import java.sql.*;
 import java.util.Arrays;

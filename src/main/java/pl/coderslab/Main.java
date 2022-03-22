@@ -1,13 +1,10 @@
 package pl.coderslab;
 
 import pl.coderslab.BCrypt.BCrypt;
-import pl.coderslab.dbUtil.DbUtil;
-import pl.coderslab.entity.UserDao;
-import pl.coderslab.model.User;
+import pl.coderslab.DAO.UserDao;
+import pl.coderslab.entity.User;
 
-import java.util.Arrays;
-
-public class MainDAO {
+public class Main {
     public static void main(String[] args) {
         UserDao userDao = new UserDao();
         User kasia = new User();
